@@ -14,7 +14,7 @@ npm run build    # verify it compiles
 npm run deploy   # build + publish dist/ to gh-pages
 ```
 
-Live at https://stuatnext.github.io/next-community-2027/ once GitHub Pages
+Live at https://nextdotio.github.io/next-community-2027/ once GitHub Pages
 is enabled for the repository (Settings → Pages → deploy from `gh-pages`).
 
 Content and branding rules — including the list of internal-only material
