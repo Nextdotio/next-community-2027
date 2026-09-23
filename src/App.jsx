@@ -50,7 +50,8 @@ const FORMAT = [
   },
   {
     step: 'The surgery',
-    b: 'The room reacts, builds on it and challenges it. Candour is the format. What gets said in the session stays in the session.',
+    // the candour line is carried by the pull-quote directly below this list
+    b: 'The room reacts, builds on it and challenges it. Candour is the format.',
   },
   {
     step: 'The takeaway',
@@ -66,7 +67,8 @@ const STANDARD = [
   },
   {
     t: 'A decade in the discipline',
-    b: 'Not every marketer qualifies. Members bring ten or more years in marketing and the scars to show for it.',
+    // "Not every marketer qualifies." is the section headline, so it is not repeated here
+    b: 'Members bring ten or more years in marketing and the scars to show for it.',
   },
   {
     t: 'Two seats, held by the company',
@@ -248,7 +250,9 @@ export default function App() {
 
       {/* ── NAV ─────────────────────────────────────────────────────────── */}
       <header className="fixed inset-x-0 top-0 z-50 border-b border-mn-line bg-mn-paper/90 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
+        {/* 74.5rem = the sections' max-w-6xl plus this bar's own px-5, so the
+            wordmark and Apply sit on the same edges as the page content */}
+        <div className="mx-auto flex h-16 max-w-[74.5rem] items-center justify-between px-5">
           <a href="#top" className="flex items-center">
             <Wordmark className="h-9" />
           </a>
@@ -265,7 +269,12 @@ export default function App() {
               Apply <ArrowUpRight className="h-4 w-4" />
             </a>
           </nav>
-          <button className="lg:hidden" onClick={() => setOpen(!open)} aria-label="Menu">
+          <button
+            className="-mr-2.5 flex h-11 w-11 items-center justify-center lg:hidden"
+            onClick={() => setOpen(!open)}
+            aria-label="Menu"
+            aria-expanded={open}
+          >
             {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
@@ -301,15 +310,17 @@ export default function App() {
             A monthly peer-led session for senior iGaming marketers. One case study,
             one candid room, fifty-five minutes. Invitation-only — and worth the invitation.
           </p>
-          <div className="hero-rise hero-d4 mt-10 flex flex-wrap items-center gap-4">
-            <a href="#membership" className="inline-flex items-center gap-2 bg-mn-red px-7 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-mn-paper transition hover:bg-mn-red-deep">
+          <div className="hero-rise hero-d4 mt-10 flex flex-wrap items-center gap-3 sm:gap-4">
+            <a href="#membership" className="inline-flex w-full items-center justify-center gap-2 text-center bg-mn-red px-7 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-mn-paper transition hover:bg-mn-red-deep sm:w-auto">
               Membership · {eur(PRICE)}/yr <ArrowRight className="h-4 w-4" />
             </a>
-            <a href={applyMailto()} className="inline-flex items-center gap-2 border border-mn-ink px-7 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-mn-ink transition hover:border-mn-red hover:text-mn-red">
+            <a href={applyMailto()} className="inline-flex w-full items-center justify-center gap-2 border border-mn-ink px-7 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-mn-ink transition hover:border-mn-red hover:text-mn-red sm:w-auto">
               Apply for a seat
             </a>
           </div>
-          <ul className="hero-rise hero-d4 mt-12 flex flex-wrap gap-x-8 gap-y-3 rule-t pt-6">
+          {/* one column on phones, 2 × 2 on tablets (a wrapped row strands the
+              last fact on its own line), a single row from lg up */}
+          <ul className="hero-rise hero-d4 mt-12 grid gap-y-3 rule-t pt-6 sm:grid-cols-2 sm:gap-x-8 lg:flex lg:flex-wrap">
             {HERO_META.map((m) => (
               <li key={m} className="text-[13px] font-semibold uppercase tracking-[0.16em] text-mn-mute">
                 {m}
@@ -357,7 +368,7 @@ export default function App() {
             ))}
           </div>
           <p className="animate-on-scroll rule-t mt-px pt-8 font-display text-2xl italic leading-snug text-mn-ink sm:text-3xl">
-            “What gets said in the surgery stays in the surgery —<br className="hidden sm:block" />
+            “What gets said in the surgery stays in the surgery —{' '}<br className="hidden sm:block" />
             that is the whole point of the room.”
           </p>
         </div>
@@ -372,20 +383,27 @@ export default function App() {
             title={<>Not every marketer <span className="mark-sweep-paper italic">qualifies.</span></>}
             lead="marketingNEXT is invitation-only. Membership is by application and review, two seats per company, and the founding cohort set the standard every new member is assessed against."
           />
-          <div className="mt-12 grid gap-x-12 gap-y-10 sm:grid-cols-2">
+          {/* the five criteria read as one list (same row anatomy as the format
+              beats) - a 2-col grid stranded the fifth on its own. Numerals are
+              charcoal here: thin yellow type on white all but disappears. */}
+          <ol className="mt-12 border-b border-mn-line-dark">
             {STANDARD.map((s, i) => (
-              <div key={s.t} className={`animate-on-scroll rule-t-dark pt-6 ${i === STANDARD.length - 1 ? 'sm:col-span-2 sm:max-w-2xl' : ''}`}>
-                <h3 className="font-display text-2xl font-semibold tracking-tight text-mn-paper">
-                  <span className="mr-3 font-light italic text-mn-red">{String(i + 1).padStart(2, '0')}</span>
-                  {s.t}
-                </h3>
-                <p className="mt-3 leading-relaxed text-mn-paper/70">{s.b}</p>
-              </div>
+              <li
+                key={s.t}
+                className="animate-on-scroll rule-t-dark grid grid-cols-[2.5rem_1fr] items-baseline gap-x-3 gap-y-2 py-7 sm:grid-cols-[3.5rem_1fr] sm:gap-x-4 lg:grid-cols-[4.5rem_minmax(0,19rem)_1fr] lg:gap-x-8"
+              >
+                <span className="font-display text-xl font-light italic tabular-nums text-mn-paper/45 sm:text-2xl">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 className="font-display text-2xl font-semibold tracking-tight text-mn-paper">{s.t}</h3>
+                <p className="col-start-2 max-w-2xl leading-relaxed text-mn-paper/70 lg:col-start-3">{s.b}</p>
+              </li>
             ))}
-          </div>
+          </ol>
+          {/* bold, not a second sweep: the headline already carries this section's one */}
           <p className="animate-on-scroll mt-14 max-w-3xl font-display text-2xl italic leading-snug text-mn-paper/90 sm:text-3xl">
             Being part of marketingNEXT should be worth a line on your LinkedIn profile.
-            That only works if the room is <span className="not-italic font-bold mark-sweep-paper">genuinely selective.</span>
+            That only works if the room is <span className="not-italic font-bold text-mn-paper">genuinely selective.</span>
           </p>
         </div>
       </section>
@@ -398,20 +416,30 @@ export default function App() {
             title={<>The 2027 programme, <span className="italic">month by month.</span></>}
             lead="The planned arc for the year. Topics are set collaboratively with members — the programme bends to what the room needs, not the other way round."
           />
-          <div className="mt-12 grid gap-x-12 lg:grid-cols-2">
+          {/* A wall calendar: months run left to right, a row per third of the
+              year on desktop and a quarter per row on tablets; phones get an
+              agenda list with the month as the date block. The month stands
+              alone - an index beside it ("01 Jan") read as a date. */}
+          <ol className="mt-12 border-y border-mn-line sm:grid sm:grid-cols-2 sm:gap-px sm:border sm:bg-mn-line md:grid-cols-3 lg:grid-cols-4">
             {PROGRAMME.map((p, i) => (
-              <div key={p.m} className="animate-on-scroll rule-t grid grid-cols-[64px_1fr] gap-4 py-5">
-                <div>
-                  <span className="font-display text-sm italic text-mn-red">{String(i + 1).padStart(2, '0')}</span>
-                  <div className="text-[12px] font-bold uppercase tracking-[0.18em] text-mn-mute">{p.m}</div>
+              <li
+                key={p.m}
+                style={{ transitionDelay: `${(i % 4) * 70}ms` }}
+                className="animate-on-scroll grid grid-cols-[3.5rem_1fr] items-baseline gap-x-4 border-t border-mn-line py-5 first:border-t-0 sm:flex sm:flex-col sm:border-t-0 sm:bg-mn-paper sm:p-6 lg:p-7"
+              >
+                <time
+                  dateTime={`2027-${String(i + 1).padStart(2, '0')}`}
+                  className="font-display text-2xl font-light italic leading-none tracking-tight text-mn-red sm:text-4xl"
+                >
+                  {p.m}
+                </time>
+                <div className="sm:mt-7">
+                  <h3 className="font-display text-lg font-semibold leading-snug tracking-tight sm:text-xl">{p.t}</h3>
+                  <p className="mt-1.5 text-[15px] leading-relaxed text-mn-ink-soft">{p.b}</p>
                 </div>
-                <div>
-                  <h3 className="font-display text-xl font-semibold tracking-tight">{p.t}</h3>
-                  <p className="mt-1 text-[15px] leading-relaxed text-mn-ink-soft">{p.b}</p>
-                </div>
-              </div>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
 
@@ -423,23 +451,24 @@ export default function App() {
             title={<>One membership. <span className="italic">Flat.</span></>}
             lead="No tiers, no per-seat uplift, no add-ons to decode. Every member company holds the same two seats in the same room on the same terms."
           />
-          <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(320px,420px)_1fr]">
+          <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(320px,420px)_1fr]">
             {/* the rate card */}
-            <div className="animate-on-scroll self-start border-2 border-mn-ink bg-mn-paper-deep p-8 sm:p-10">
+            <div className="animate-on-scroll self-start border-2 border-mn-ink bg-mn-paper-deep p-6 sm:p-10">
               <p className="text-[12px] font-bold uppercase tracking-[0.24em] text-mn-red">Annual membership</p>
-              <div className="mt-4 font-display text-7xl font-semibold tracking-tight">
+              <div className="mt-4 font-display text-6xl font-semibold tracking-tight min-[360px]:text-7xl">
                 {eur(PRICE)}
               </div>
               <p className="mt-2 text-sm font-semibold uppercase tracking-[0.14em] text-mn-mute">
                 per company · per year
               </p>
+              {/* "flat, no tiers, no per-seat uplift" is the section lead just above */}
               <p className="mt-5 leading-relaxed text-mn-ink-soft">
-                Flat. No tiers. No per-seat uplift. Two senior seats, everything the community
-                does, and both Valletta passes — in one line on one invoice.
+                Two senior seats, everything the community does, and both Valletta
+                passes — in one line on one invoice.
               </p>
               <a
                 href={applyMailto()}
-                className="mt-8 inline-flex w-full items-center justify-center gap-2 bg-mn-red px-6 py-4 text-sm font-bold uppercase tracking-[0.14em] text-mn-paper transition hover:bg-mn-red-deep"
+                className="mt-8 inline-flex w-full items-center justify-center gap-2 text-center bg-mn-red px-3 py-4 text-sm font-bold uppercase tracking-[0.14em] text-mn-paper transition hover:bg-mn-red-deep sm:px-6"
               >
                 Apply for membership <ArrowUpRight className="h-4 w-4" />
               </a>
@@ -475,30 +504,45 @@ export default function App() {
       {/* ── № 06 · APPLY ────────────────────────────────────────────────── */}
       <section id="apply" className="bg-mn-ink px-5 py-24 text-mn-paper">
         <div className="mx-auto max-w-6xl">
+          {/* No lead here: it restated steps 1 and 2, which sit directly below. */}
           <SectionHead
             dark
             no="06"
             title={<>An application, <span className="mark-sweep-paper italic">not a form.</span></>}
-            lead="Candidates submit who they are, what company they represent and what they would bring to the group. The community lead reviews every application; existing members can nominate."
           />
-          <div className="mt-12 grid gap-px bg-mn-line-dark sm:grid-cols-3">
-            {APPLY_STEPS.map((s) => (
-              <div key={s.n} className="animate-on-scroll bg-mn-ink py-8 sm:px-8 sm:first:pl-0 sm:last:pr-0">
-                <span className="font-display text-5xl font-light italic text-mn-red">{s.n}</span>
-                <h3 className="mt-5 font-display text-2xl font-semibold tracking-tight text-mn-paper">{s.t}</h3>
-                <p className="mt-3 leading-relaxed text-mn-paper/70">{s.b}</p>
-              </div>
+          {/* A numbered timeline: yellow step markers joined by a rail -
+              horizontal from sm up, a vertical spine on phones. */}
+          <ol className="mt-12 grid sm:grid-cols-3 sm:gap-8 lg:gap-12">
+            {APPLY_STEPS.map((s, i) => (
+              <li
+                key={s.n}
+                style={{ transitionDelay: `${i * 90}ms` }}
+                className="animate-on-scroll relative pb-10 pl-16 last:pb-0 sm:pb-0 sm:pl-0"
+              >
+                {i < APPLY_STEPS.length - 1 && (
+                  <span
+                    aria-hidden
+                    className="absolute bottom-3 left-5 top-[3.25rem] w-px bg-mn-paper/15 sm:bottom-auto sm:left-[3.25rem] sm:right-[-1.25rem] sm:top-5 sm:h-px sm:w-auto lg:right-[-2.25rem]"
+                  />
+                )}
+                <span className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center bg-mn-red font-display text-lg font-bold tabular-nums text-mn-paper sm:static">
+                  {s.n}
+                </span>
+                <h3 className="pt-1 font-display text-2xl font-semibold tracking-tight text-mn-paper sm:mt-7 sm:pt-0">{s.t}</h3>
+                <p className="mt-3 max-w-sm leading-relaxed text-mn-paper/70">{s.b}</p>
+              </li>
             ))}
-          </div>
+          </ol>
           <div className="animate-on-scroll mt-14 flex flex-wrap items-center gap-5 rule-t-dark pt-10">
             <a
               href={applyMailto()}
-              className="inline-flex items-center gap-2 bg-mn-red px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] text-mn-paper transition hover:bg-mn-red-deep"
+              className="inline-flex w-full items-center justify-center gap-2 text-center bg-mn-red px-8 py-4 text-sm font-bold uppercase tracking-[0.14em] text-mn-paper transition hover:bg-mn-red-deep sm:w-auto"
             >
               Start your application <ArrowUpRight className="h-4 w-4" />
             </a>
+            {/* "three short paragraphs beat a CV" is step 1, directly above */}
             <p className="text-sm text-mn-paper/60">
-              Or write to <a href={`mailto:${CONTACT}`} className="font-semibold text-mn-paper underline decoration-mn-red underline-offset-4">{CONTACT}</a> — three short paragraphs beat a CV.
+              Or write to <a href={`mailto:${CONTACT}`} className="font-semibold text-mn-paper underline decoration-mn-red underline-offset-4">{CONTACT}</a>
             </p>
           </div>
         </div>
