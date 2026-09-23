@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+@theme {
+  /* marketingNEXT official brand (logo pack, 2 Sep 2026): the NEXT.io house
+     family - charcoal #242426 + yellow #ffcf33, exactly as the lockup SVGs.
+     Token names kept from the first build so the markup reads unchanged:
+     mn-paper = page ground (charcoal) · mn-ink = primary text (white) ·
+     mn-red = THE accent (brand yellow) - yellow is the only accent. */
+  --color-mn-paper: #242426;
+  --color-mn-paper-deep: #2d2d30;
+  --color-mn-ink: #ffffff;
+  --color-mn-ink-soft: #d8d8db;
+  --color-mn-mute: #9b9ba1;
+  --color-mn-line: #3c3c40;
+  --color-mn-line-dark: #d9d9d3;
+  --color-mn-red: #ffcf33;
+  --color-mn-red-deep: #f2be0f;
+  --font-display: 'Inter', 'Helvetica Neue', Arial, ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter', 'Helvetica Neue', Arial, ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: #242426;
+    color: #ffffff;
+    font-family: 'Inter', 'Helvetica Neue', Arial, ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: #ffcf33; color: #242426; }
+  section[id] { scroll-margin-top: 5.5rem; }
+}
+
+@layer utilities {
+  /* the marker stroke - a brand-yellow sweep behind key words */
+  .mark-sweep {
+    background-image: linear-gradient(100deg,
+      rgba(255, 207, 51, 0) 0.6%,
+      rgba(255, 207, 51, 0.32) 3%,
+      rgba(255, 207, 51, 0.38) 96%,
+      rgba(255, 207, 51, 0) 98.4%);
+    background-size: 100% 0.62em;
+    background-position: 0 78%;
+    background-repeat: no-repeat;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  /* variant for the inverted (white) sections */
+  .mark-sweep-paper {
+    background-image: linear-gradient(100deg,
+      rgba(255, 207, 51, 0) 0.6%,
+      rgba(255, 207, 51, 0.65) 3%,
+      rgba(255, 207, 51, 0.75) 96%,
+      rgba(255, 207, 51, 0) 98.4%);
+    background-size: 100% 0.62em;
+    background-position: 0 78%;
+    background-repeat: no-repeat;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  /* hairline rules */
+  .rule-t { border-top: 1px solid #3c3c40; }
+  .rule-t-dark { border-top: 1px solid #d9d9d3; }
+
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1);
+  }
+  .animate-on-scroll.visible { opacity: 1; transform: none; }
+
+  .hero-rise { opacity: 0; transform: translateY(30px); animation: heroRise .9s cubic-bezier(.2,.7,.3,1) forwards; }
+  .hero-d1 { animation-delay: .08s; }
+  .hero-d2 { animation-delay: .2s; }
+  .hero-d3 { animation-delay: .34s; }
+  .hero-d4 { animation-delay: .48s; }
+}
+
+@keyframes heroRise {
+  to { opacity: 1; transform: none; }
+}
+
+/* film-grain over everything, very quiet */
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: .04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-on-scroll { opacity: 1; transform: none; transition: none; }
+  .hero-rise { opacity: 1; transform: none; animation: none; }
+}
