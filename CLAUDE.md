@@ -82,3 +82,21 @@ Also note: the brief says "operators only" but the founding cohort is
 supplier-heavy — the page deliberately says "senior iGaming marketers"
 and doesn't gate by company type. If that gate is ever decided for real,
 update the STANDARD array, not just the hero.
+
+## Navigation (23 Sep 2026)
+
+- The first screen carries the offer: `MembershipSummary` in the hero shows
+  `PRICE`, "per company · per year" and the six `INCLUDES` titles, with
+  "Apply for a seat" (the templated mailto) and "Membership details" (jumps
+  to `#membership`). It is a summary: descriptions and terms stay in the
+  membership section, and nothing new is claimed there.
+- Section order: why → format → standard → membership (№ 04) → programme
+  (№ 05) → apply. The product sits ahead of the programme, which is
+  supporting detail. `NAV` follows the page order; renumber both together.
+- Anchors land by measurement: App measures the fixed header into `--nav-h`
+  (ResizeObserver) and `html` uses it as `scroll-padding-top`. Never hardcode
+  a nav offset. First-load deep links (`…/#membership`) are re-applied once
+  React has rendered and while fonts settle.
+- Below lg the header shows a price chip to `#membership` once the hero
+  summary has scrolled away (hidden while the membership section is on
+  screen); the phone menu lists Membership too.

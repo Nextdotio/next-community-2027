@@ -20,7 +20,10 @@
 }
 
 @layer base {
-  html { scroll-behavior: smooth; }
+  /* --nav-h is the fixed header's measured height (App.jsx sets it with a
+     ResizeObserver), so every anchor lands just below the bar at any width;
+     4rem is the h-16 bar, used until the script runs. */
+  html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h, 4rem); }
   body {
     background-color: #242426;
     color: #ffffff;
@@ -28,7 +31,9 @@
     -webkit-font-smoothing: antialiased;
   }
   ::selection { background: #ffcf33; color: #242426; }
-  section[id] { scroll-margin-top: 5.5rem; }
+  /* no one-word last lines: headings balance, running text avoids orphans */
+  h1, h2, h3 { text-wrap: balance; }
+  p, li { text-wrap: pretty; }
 }
 
 @layer utilities {

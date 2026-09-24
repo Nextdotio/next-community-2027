@@ -84,7 +84,7 @@ const STANDARD = [
   },
 ]
 
-// № 04 — the 2027 programme (topics set collaboratively; this is the planned arc)
+// № 05 — the 2027 programme (topics set collaboratively; this is the planned arc)
 const PROGRAMME = [
   { m: 'Jan', t: 'The ecosystem', b: 'Mapping the year before it starts — strategy the whole room can pressure-test.' },
   { m: 'Feb', t: 'Brand marketing', b: 'Planning the brand year ahead.' },
@@ -100,7 +100,8 @@ const PROGRAMME = [
   { m: 'Dec', t: 'Year-end roundtable', b: 'What worked, what didn’t — said plainly.' },
 ]
 
-// № 05 — what the annual membership includes
+// № 04 — what the annual membership includes (the hero summary lists these
+// titles too, so a buyer sees what the price buys on the first screen)
 const INCLUDES = [
   {
     icon: Users,
@@ -160,12 +161,14 @@ const APPLY_STEPS = [
   },
 ]
 
+// Section order is the page order: the membership (the product) comes straight
+// after the standard, ahead of the programme, which is supporting detail.
 const NAV = [
   ['why', 'Why it exists'],
   ['format', 'The format'],
   ['standard', 'The standard'],
-  ['programme', '2027 programme'],
   ['membership', 'Membership'],
+  ['programme', '2027 programme'],
 ]
 
 /* ────────────────────────────────────────────────────────────────────────────
@@ -215,13 +218,20 @@ function Wordmark({ className = 'h-8', variant = 'light' }) {
   )
 }
 
+// A brand name inside an uppercase label keeps its own casing: CSS caps would
+// render NEXT.IO and MARKETINGNEXT. Check rendered innerText, not the source.
+function Brand({ children, className = '' }) {
+  return <span className={`normal-case ${className}`}>{children}</span>
+}
+
 function SectionHead({ no, title, lead, dark = false }) {
   return (
     <div className={`animate-on-scroll ${dark ? 'rule-t-dark' : 'rule-t'} pt-5`}>
       <div className="flex items-baseline gap-4">
         <span className={`font-display text-sm italic font-semibold ${dark ? 'text-mn-paper' : 'text-mn-red'}`}>№ {no}</span>
-        <span className={`text-[11px] font-bold uppercase tracking-[0.22em] ${dark ? 'text-mn-paper/50' : 'text-mn-mute'}`}>
-          marketingNEXT · 2027
+        {/* /65 on the white sections: /50 was 3.1:1 at 11px */}
+        <span className={`text-[11px] font-bold uppercase tracking-[0.22em] ${dark ? 'text-mn-paper/65' : 'text-mn-mute'}`}>
+          <Brand className="tracking-[0.06em]">marketingNEXT</Brand> · 2027
         </span>
       </div>
       <h2 className={`mt-5 font-display text-4xl leading-[1.04] font-semibold tracking-tight sm:text-5xl ${dark ? 'text-mn-paper' : 'text-mn-ink'}`}>
@@ -236,6 +246,50 @@ function SectionHead({ no, title, lead, dark = false }) {
   )
 }
 
+// The first screen's answer to "what can I buy and what does it cost": the one
+// product, its price and the six deliverables by name, read from PRICE and
+// INCLUDES. A summary only - descriptions and terms stay in the membership
+// section, which "Membership details" jumps to. Price, then actions, then the
+// list (the pricing-card order), so on a phone both buttons sit on the first
+// screen; from sm to lg the list takes a second column.
+function MembershipSummary({ summaryRef }) {
+  return (
+    <aside
+      ref={summaryRef}
+      aria-labelledby="summary-label"
+      className="hero-rise hero-d4 border border-mn-line bg-mn-paper-deep p-5 min-[360px]:p-6 sm:grid sm:grid-cols-[minmax(0,15.5rem)_1fr] sm:gap-x-10 sm:p-8 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:block lg:self-start lg:p-7"
+    >
+      <div>
+        <p id="summary-label" className="text-[12px] font-bold uppercase tracking-[0.24em] text-mn-red">Annual membership</p>
+        <p className="mt-3 font-display text-5xl font-semibold leading-none tracking-tight sm:text-6xl">{eur(PRICE)}</p>
+        <p className="mt-2.5 text-[12px] font-semibold uppercase tracking-[0.14em] text-mn-mute">per company · per year</p>
+        <div className="mt-6 grid gap-2.5">
+          <a
+            href={applyMailto()}
+            className="inline-flex h-12 items-center justify-center gap-2 bg-mn-red px-4 text-[13px] font-bold uppercase tracking-[0.12em] text-mn-paper transition hover:bg-mn-red-deep"
+          >
+            Apply for a seat <ArrowUpRight className="h-4 w-4" />
+          </a>
+          <a
+            href="#membership"
+            className="inline-flex h-11 items-center justify-center gap-2 border border-mn-ink/30 px-4 text-[13px] font-bold uppercase tracking-[0.12em] text-mn-ink transition hover:border-mn-red hover:text-mn-red"
+          >
+            Membership details <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
+      </div>
+      <ul className="mt-6 space-y-2.5 border-t border-mn-line pt-5 sm:mt-0 sm:border-t-0 sm:pt-0 lg:mt-6 lg:border-t lg:pt-5">
+        {INCLUDES.map((inc) => (
+          <li key={inc.t} className="flex gap-2.5 text-[14px] leading-snug text-mn-ink-soft">
+            <Check className="mt-0.5 h-4 w-4 shrink-0 text-mn-red" strokeWidth={2.5} aria-hidden />
+            {inc.t}
+          </li>
+        ))}
+      </ul>
+    </aside>
+  )
+}
+
 /* ────────────────────────────────────────────────────────────────────────────
    Page
    ──────────────────────────────────────────────────────────────────────────── */
@@ -244,48 +298,135 @@ export default function App() {
   useReveal()
   const [open, setOpen] = useState(false)
   const year = new Date().getFullYear()
+  const headerRef = useRef(null)
+  const summaryRef = useRef(null)
+
+  // Anchors land below the fixed header by measurement, not a hardcoded
+  // offset: --nav-h feeds html's scroll-padding-top (index.css). Measured with
+  // the phone menu closed - a menu tap closes it before the page moves.
+  useEffect(() => {
+    const el = headerRef.current
+    if (!el) return
+    const root = document.documentElement
+    const set = () => {
+      if (el.dataset.open !== 'true') root.style.setProperty('--nav-h', `${el.offsetHeight}px`)
+    }
+    set()
+    const ro = new ResizeObserver(set)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
+  // Deep links (…/#membership) on first load: the browser looks for the target
+  // before React has rendered it, so jump once the page exists, then keep the
+  // target pinned while Inter swaps in and the layout settles (any resize of
+  // the page re-jumps) - until the reader takes over or 2.5s pass.
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1))
+    if (!id || id === 'top' || !document.getElementById(id)) return
+    const html = document.documentElement
+    const jump = () => {
+      const target = document.getElementById(id)
+      if (!target) return
+      const prev = html.style.scrollBehavior
+      html.style.scrollBehavior = 'auto'
+      target.scrollIntoView({ block: 'start' })
+      html.style.scrollBehavior = prev
+    }
+    const inputs = ['wheel', 'touchstart', 'keydown', 'pointerdown']
+    let live = true
+    const ro = new ResizeObserver(() => { if (live) jump() })
+    const release = () => {
+      live = false
+      ro.disconnect()
+      clearTimeout(timer)
+      inputs.forEach((e) => window.removeEventListener(e, release))
+    }
+    const timer = setTimeout(release, 2500)
+    inputs.forEach((e) => window.addEventListener(e, release, { passive: true }))
+    jump()
+    ro.observe(document.body)
+    document.fonts?.ready.then(() => { if (live) jump() })
+    return release
+  }, [])
+
+  // Phones and tablets: a price chip in the header once the hero summary has
+  // scrolled away, hidden again while the membership section is on screen.
+  // Desktop already carries "Membership" in the nav.
+  const [chip, setChip] = useState(false)
+  useEffect(() => {
+    let raf = 0
+    const measure = () => {
+      const navH = headerRef.current?.offsetHeight || 64
+      const s = summaryRef.current?.getBoundingClientRect()
+      const m = document.getElementById('membership')?.getBoundingClientRect()
+      const past = s ? s.bottom < navH : false
+      const onMembership = m ? m.top < window.innerHeight && m.bottom > navH : false
+      setChip(past && !onMembership)
+    }
+    const onScroll = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(measure) }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    measure()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      cancelAnimationFrame(raf)
+    }
+  }, [])
+  const chipOn = chip && !open
 
   return (
     <div className="grain min-h-screen bg-mn-paper text-mn-ink">
 
       {/* ── NAV ─────────────────────────────────────────────────────────── */}
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-mn-line bg-mn-paper/90 backdrop-blur">
+      <header ref={headerRef} data-open={open} className="fixed inset-x-0 top-0 z-50 border-b border-mn-line bg-mn-paper/90 backdrop-blur">
         {/* 74.5rem = the sections' max-w-6xl plus this bar's own px-5, so the
             wordmark and Apply sit on the same edges as the page content */}
         <div className="mx-auto flex h-16 max-w-[74.5rem] items-center justify-between px-5">
-          <a href="#top" className="flex items-center">
+          <a href="#top" className="flex h-16 items-center">
             <Wordmark className="h-9" />
           </a>
           <nav className="hidden items-center gap-7 lg:flex">
             {NAV.map(([id, label]) => (
-              <a key={id} href={`#${id}`} className="text-[13px] font-semibold uppercase tracking-[0.14em] text-mn-ink-soft transition hover:text-mn-red">
+              <a key={id} href={`#${id}`} className="flex h-10 items-center text-[13px] font-semibold uppercase tracking-[0.14em] text-mn-ink-soft transition hover:text-mn-red">
                 {label}
               </a>
             ))}
             <a
               href={applyMailto()}
-              className="inline-flex items-center gap-2 bg-mn-ink px-5 py-2.5 text-[13px] font-bold uppercase tracking-[0.14em] text-mn-paper transition hover:bg-mn-red"
+              className="inline-flex h-10 items-center gap-2 bg-mn-ink px-5 text-[13px] font-bold uppercase tracking-[0.14em] text-mn-paper transition hover:bg-mn-red"
             >
               Apply <ArrowUpRight className="h-4 w-4" />
             </a>
           </nav>
-          <button
-            className="-mr-2.5 flex h-11 w-11 items-center justify-center lg:hidden"
-            onClick={() => setOpen(!open)}
-            aria-label="Menu"
-            aria-expanded={open}
-          >
-            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          <div className="flex items-center gap-2 lg:hidden">
+            <a
+              href="#membership"
+              aria-hidden={!chipOn}
+              tabIndex={chipOn ? 0 : -1}
+              className={`inline-flex h-10 items-center gap-1.5 border border-mn-ink/25 px-3 text-[11px] font-bold uppercase tracking-[0.14em] text-mn-ink transition duration-300 hover:border-mn-red hover:text-mn-red ${chipOn ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+            >
+              <span className="hidden sm:inline">Membership ·&nbsp;</span>{eur(PRICE)}/yr <ArrowRight className="h-3.5 w-3.5" />
+            </a>
+            <button
+              className="-mr-2.5 flex h-11 w-11 items-center justify-center"
+              onClick={() => setOpen(!open)}
+              aria-label="Menu"
+              aria-expanded={open}
+            >
+              {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
         {open && (
-          <nav className="border-t border-mn-line bg-mn-paper px-5 py-4 lg:hidden">
+          <nav className="border-t border-mn-line bg-mn-paper px-5 py-3 lg:hidden">
             {NAV.map(([id, label]) => (
-              <a key={id} href={`#${id}`} onClick={() => setOpen(false)} className="block py-2.5 text-sm font-semibold uppercase tracking-[0.14em] text-mn-ink-soft">
+              <a key={id} href={`#${id}`} onClick={() => setOpen(false)} className="flex h-11 items-center text-sm font-semibold uppercase tracking-[0.14em] text-mn-ink-soft">
                 {label}
               </a>
             ))}
-            <a href={applyMailto()} className="mt-2 inline-flex items-center gap-2 bg-mn-ink px-5 py-2.5 text-sm font-bold uppercase tracking-[0.14em] text-mn-paper">
+            <a href={applyMailto()} className="mt-2 mb-1 inline-flex h-11 items-center gap-2 bg-mn-ink px-5 text-sm font-bold uppercase tracking-[0.14em] text-mn-paper">
               Apply <ArrowUpRight className="h-4 w-4" />
             </a>
           </nav>
@@ -293,34 +434,33 @@ export default function App() {
       </header>
 
       {/* ── HERO ────────────────────────────────────────────────────────── */}
-      <section id="top" className="relative overflow-hidden px-5 pb-20 pt-36 sm:pt-44">
-        {/* oversized year, set like a folio number */}
-        <div aria-hidden className="pointer-events-none absolute -right-6 top-24 hidden select-none font-display text-[16rem] font-black leading-none tracking-tighter text-mn-ink/[0.05] lg:block">
-          ’27
-        </div>
-        <div className="mx-auto max-w-6xl">
-          <p className="hero-rise hero-d1 text-[12px] font-bold uppercase tracking-[0.26em] text-mn-red">
-            A NEXT.io community · iGaming’s senior marketing circle
-          </p>
-          <h1 className="hero-rise hero-d2 mt-6 max-w-4xl font-display text-6xl font-semibold leading-[0.98] tracking-tight sm:text-7xl lg:text-8xl">
-            The marketing<br />
-            <span className="text-mn-red italic">surgery.</span>
-          </h1>
-          <p className="hero-rise hero-d3 mt-8 max-w-2xl text-lg leading-relaxed text-mn-ink-soft sm:text-xl">
-            A monthly peer-led session for senior iGaming marketers. One case study,
-            one candid room, fifty-five minutes. Invitation-only — and worth the invitation.
-          </p>
-          <div className="hero-rise hero-d4 mt-10 flex flex-wrap items-center gap-3 sm:gap-4">
-            <a href="#membership" className="inline-flex w-full items-center justify-center gap-2 text-center bg-mn-red px-7 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-mn-paper transition hover:bg-mn-red-deep sm:w-auto">
-              Membership · {eur(PRICE)}/yr <ArrowRight className="h-4 w-4" />
-            </a>
-            <a href={applyMailto()} className="inline-flex w-full items-center justify-center gap-2 border border-mn-ink px-7 py-3.5 text-sm font-bold uppercase tracking-[0.14em] text-mn-ink transition hover:border-mn-red hover:text-mn-red sm:w-auto">
-              Apply for a seat
-            </a>
+      {/* Two columns from lg: the pitch on the left with its four facts
+          bottom-aligned to the membership summary on the right, so the whole
+          offer sits on a 1280 x 800 first screen. Below lg the summary follows
+          the pitch; on a phone its price and both buttons stay above the fold. */}
+      <section id="top" className="relative overflow-hidden px-5 pb-16 pt-28 sm:pb-20 sm:pt-36">
+        <div className="mx-auto grid max-w-6xl gap-y-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:grid-rows-[auto_1fr] lg:gap-x-12 xl:grid-cols-[minmax(0,1fr)_24rem] xl:gap-x-16">
+          <div className="lg:col-start-1 lg:row-start-1">
+            {/* balanced, with the dot bound to the first phrase, so a narrow
+                screen breaks after it instead of opening a line with it */}
+            <p className="hero-rise hero-d1 text-balance text-[12px] font-bold uppercase tracking-[0.26em] text-mn-red">
+              A <Brand>NEXT.io</Brand> community&nbsp;· iGaming’s senior marketing circle
+            </p>
+            {/* sized to the viewport below sm so "The marketing" holds one line
+                (at 60px it broke to The / marketing / surgery.) */}
+            <h1 className="hero-rise hero-d2 mt-6 font-display text-[clamp(2.5rem,13vw,3.75rem)] font-semibold leading-[0.98] tracking-tight sm:text-7xl xl:text-8xl">
+              The marketing<br />
+              <span className="text-mn-red italic">surgery.</span>
+            </h1>
+            <p className="hero-rise hero-d3 mt-6 max-w-2xl text-lg leading-relaxed text-mn-ink-soft sm:mt-8 sm:text-xl">
+              A monthly peer-led session for senior iGaming marketers. One case study,
+              one candid room, fifty-five minutes. Invitation-only — and worth the invitation.
+            </p>
           </div>
-          {/* one column on phones, 2 × 2 on tablets (a wrapped row strands the
-              last fact on its own line), a single row from lg up */}
-          <ul className="hero-rise hero-d4 mt-12 grid gap-y-3 rule-t pt-6 sm:grid-cols-2 sm:gap-x-8 lg:flex lg:flex-wrap">
+          <MembershipSummary summaryRef={summaryRef} />
+          {/* one column on phones, 2 × 2 from sm (a wrapped row strands the
+              last fact on its own line) */}
+          <ul className="hero-rise hero-d4 grid gap-y-3 rule-t pt-6 sm:grid-cols-2 sm:gap-x-8 lg:col-start-1 lg:row-start-2 lg:self-end">
             {HERO_META.map((m) => (
               <li key={m} className="text-[13px] font-semibold uppercase tracking-[0.16em] text-mn-mute">
                 {m}
@@ -331,7 +471,7 @@ export default function App() {
       </section>
 
       {/* ── № 01 · WHY ──────────────────────────────────────────────────── */}
-      <section id="why" className="px-5 py-20">
+      <section id="why" className="px-5 py-16 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <SectionHead
             no="01"
@@ -351,7 +491,7 @@ export default function App() {
       </section>
 
       {/* ── № 02 · FORMAT ───────────────────────────────────────────────── */}
-      <section id="format" className="px-5 py-20">
+      <section id="format" className="px-5 py-16 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <SectionHead
             no="02"
@@ -375,7 +515,7 @@ export default function App() {
       </section>
 
       {/* ── № 03 · THE STANDARD (dark) ──────────────────────────────────── */}
-      <section id="standard" className="bg-mn-ink px-5 py-24 text-mn-paper">
+      <section id="standard" className="bg-mn-ink px-5 py-20 text-mn-paper sm:py-24">
         <div className="mx-auto max-w-6xl">
           <SectionHead
             dark
@@ -385,14 +525,16 @@ export default function App() {
           />
           {/* the five criteria read as one list (same row anatomy as the format
               beats) - a 2-col grid stranded the fifth on its own. Numerals are
-              charcoal here: thin yellow type on white all but disappears. */}
+              charcoal here: thin yellow type on white all but disappears (/65:
+              /45 was 2.7:1). From xl the title column fits every criterion on
+              one line, so no row breaks the rhythm. */}
           <ol className="mt-12 border-b border-mn-line-dark">
             {STANDARD.map((s, i) => (
               <li
                 key={s.t}
-                className="animate-on-scroll rule-t-dark grid grid-cols-[2.5rem_1fr] items-baseline gap-x-3 gap-y-2 py-7 sm:grid-cols-[3.5rem_1fr] sm:gap-x-4 lg:grid-cols-[4.5rem_minmax(0,19rem)_1fr] lg:gap-x-8"
+                className="animate-on-scroll rule-t-dark grid grid-cols-[2.5rem_1fr] items-baseline gap-x-3 gap-y-2 py-7 sm:grid-cols-[3.5rem_1fr] sm:gap-x-4 lg:grid-cols-[4.5rem_minmax(0,19rem)_1fr] lg:gap-x-8 xl:grid-cols-[4.5rem_minmax(0,23rem)_1fr]"
               >
-                <span className="font-display text-xl font-light italic tabular-nums text-mn-paper/45 sm:text-2xl">
+                <span className="font-display text-xl font-light italic tabular-nums text-mn-paper/65 sm:text-2xl">
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <h3 className="font-display text-2xl font-semibold tracking-tight text-mn-paper">{s.t}</h3>
@@ -408,46 +550,11 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── № 04 · PROGRAMME ────────────────────────────────────────────── */}
-      <section id="programme" className="px-5 py-20">
+      {/* ── № 04 · MEMBERSHIP ───────────────────────────────────────────── */}
+      <section id="membership" className="px-5 py-16 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <SectionHead
             no="04"
-            title={<>The 2027 programme, <span className="italic">month by month.</span></>}
-            lead="The planned arc for the year. Topics are set collaboratively with members — the programme bends to what the room needs, not the other way round."
-          />
-          {/* A wall calendar: months run left to right, a row per third of the
-              year on desktop and a quarter per row on tablets; phones get an
-              agenda list with the month as the date block. The month stands
-              alone - an index beside it ("01 Jan") read as a date. */}
-          <ol className="mt-12 border-y border-mn-line sm:grid sm:grid-cols-2 sm:gap-px sm:border sm:bg-mn-line md:grid-cols-3 lg:grid-cols-4">
-            {PROGRAMME.map((p, i) => (
-              <li
-                key={p.m}
-                style={{ transitionDelay: `${(i % 4) * 70}ms` }}
-                className="animate-on-scroll grid grid-cols-[3.5rem_1fr] items-baseline gap-x-4 border-t border-mn-line py-5 first:border-t-0 sm:flex sm:flex-col sm:border-t-0 sm:bg-mn-paper sm:p-6 lg:p-7"
-              >
-                <time
-                  dateTime={`2027-${String(i + 1).padStart(2, '0')}`}
-                  className="font-display text-2xl font-light italic leading-none tracking-tight text-mn-red sm:text-4xl"
-                >
-                  {p.m}
-                </time>
-                <div className="sm:mt-7">
-                  <h3 className="font-display text-lg font-semibold leading-snug tracking-tight sm:text-xl">{p.t}</h3>
-                  <p className="mt-1.5 text-[15px] leading-relaxed text-mn-ink-soft">{p.b}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* ── № 05 · MEMBERSHIP ───────────────────────────────────────────── */}
-      <section id="membership" className="px-5 py-20">
-        <div className="mx-auto max-w-6xl">
-          <SectionHead
-            no="05"
             title={<>One membership. <span className="italic">Flat.</span></>}
             lead="No tiers, no per-seat uplift, no add-ons to decode. Every member company holds the same two seats in the same room on the same terms."
           />
@@ -501,8 +608,43 @@ export default function App() {
         </div>
       </section>
 
+      {/* ── № 05 · PROGRAMME ────────────────────────────────────────────── */}
+      <section id="programme" className="px-5 py-16 sm:py-20">
+        <div className="mx-auto max-w-6xl">
+          <SectionHead
+            no="05"
+            title={<>The 2027 programme, <span className="italic">month by month.</span></>}
+            lead="The planned arc for the year. Topics are set collaboratively with members — the programme bends to what the room needs, not the other way round."
+          />
+          {/* A wall calendar: months run left to right, a row per third of the
+              year on desktop and a quarter per row on tablets; phones get an
+              agenda list with the month as the date block. The month stands
+              alone - an index beside it ("01 Jan") read as a date. */}
+          <ol className="mt-12 border-y border-mn-line sm:grid sm:grid-cols-2 sm:gap-px sm:border sm:bg-mn-line md:grid-cols-3 lg:grid-cols-4">
+            {PROGRAMME.map((p, i) => (
+              <li
+                key={p.m}
+                style={{ transitionDelay: `${(i % 4) * 70}ms` }}
+                className="animate-on-scroll grid grid-cols-[3.5rem_1fr] items-baseline gap-x-4 border-t border-mn-line py-5 first:border-t-0 sm:flex sm:flex-col sm:border-t-0 sm:bg-mn-paper sm:p-6 lg:p-7"
+              >
+                <time
+                  dateTime={`2027-${String(i + 1).padStart(2, '0')}`}
+                  className="font-display text-2xl font-light italic leading-none tracking-tight text-mn-red sm:text-4xl"
+                >
+                  {p.m}
+                </time>
+                <div className="sm:mt-7">
+                  <h3 className="font-display text-lg font-semibold leading-snug tracking-tight sm:text-xl">{p.t}</h3>
+                  <p className="mt-1.5 text-[15px] leading-relaxed text-mn-ink-soft">{p.b}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
       {/* ── № 06 · APPLY ────────────────────────────────────────────────── */}
-      <section id="apply" className="bg-mn-ink px-5 py-24 text-mn-paper">
+      <section id="apply" className="bg-mn-ink px-5 py-20 text-mn-paper sm:py-24">
         <div className="mx-auto max-w-6xl">
           {/* No lead here: it restated steps 1 and 2, which sit directly below. */}
           <SectionHead
@@ -541,8 +683,8 @@ export default function App() {
               Start your application <ArrowUpRight className="h-4 w-4" />
             </a>
             {/* "three short paragraphs beat a CV" is step 1, directly above */}
-            <p className="text-sm text-mn-paper/60">
-              Or write to <a href={`mailto:${CONTACT}`} className="font-semibold text-mn-paper underline decoration-mn-red underline-offset-4">{CONTACT}</a>
+            <p className="text-sm text-mn-paper/70">
+              Or write to <a href={`mailto:${CONTACT}`} className="-my-3 inline-block py-3 font-semibold text-mn-paper underline decoration-mn-red underline-offset-4">{CONTACT}</a>
             </p>
           </div>
         </div>
@@ -559,7 +701,7 @@ export default function App() {
             </p>
           </div>
           <div className="text-sm text-mn-mute">
-            <a href={`mailto:${CONTACT}`} className="font-semibold text-mn-ink transition hover:text-mn-red">{CONTACT}</a>
+            <a href={`mailto:${CONTACT}`} className="-my-3 inline-block py-3 font-semibold text-mn-ink transition hover:text-mn-red">{CONTACT}</a>
             <p className="mt-1">© {year} NEXT.io · All prices EUR, excl. VAT</p>
           </div>
         </div>
