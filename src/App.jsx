@@ -29,7 +29,7 @@ const AVAILABILITY = 'By application only'
 
 // The hero (the deck's cover repeats it)
 const HERO_TITLE = ['The marketing', 'surgery.']
-const HERO_LEDE = 'A monthly peer-led session for senior iGaming marketers. One case study, one candid room, fifty-five minutes. Invitation-only — and worth the invitation.'
+const HERO_LEDE = 'A monthly peer-led session for senior iGaming marketers. One case study, one candid room, fifty-five minutes. Invitation-only, and worth the invitation.'
 
 const HERO_META = [
   'One session a month',
@@ -43,7 +43,7 @@ const WHY = [
   {
     n: '01',
     t: 'Intelligence you can act on',
-    b: 'Real campaigns, real budgets, real results — presented by the people who ran them. The session ends with what you would do differently on Monday morning.',
+    b: 'Real campaigns, real budgets and real results, presented by the people who ran them. The session ends with what you would do differently on Monday morning.',
   },
   {
     n: '02',
@@ -61,7 +61,7 @@ const WHY = [
 const FORMAT = [
   {
     step: 'The case',
-    b: 'A member — or a notable marketer we bring in — presents a real piece of work: the brief, the numbers, the decisions, what happened.',
+    b: 'A member, or a notable marketer we bring in, presents a real piece of work: the brief, the numbers, the decisions, what happened.',
   },
   {
     step: 'The surgery',
@@ -77,8 +77,8 @@ const FORMAT = [
 // the pull-quote under the format beats (two lines: the page breaks between
 // them from sm up)
 const FORMAT_QUOTE = [
-  'What gets said in the surgery stays in the surgery —',
-  'that is the whole point of the room.',
+  'What gets said in the surgery stays in the surgery.',
+  'That is the whole point of the room.',
 ]
 
 // № 03 — the membership standard
@@ -102,7 +102,7 @@ const STANDARD = [
   },
   {
     t: 'The seat can stay open',
-    b: 'If the company’s most senior marketer can’t commit, the seat isn’t passed down — it stays open. That is what keeps the room worth being in.',
+    b: 'If the company’s most senior marketer can’t commit, the seat isn’t passed down. It stays open. That is what keeps the room worth being in.',
   },
 ]
 
@@ -114,18 +114,18 @@ const STANDARD_CLOSE = {
 
 // № 05 — the 2027 programme (topics set collaboratively; this is the planned arc)
 const PROGRAMME = [
-  { m: 'Jan', t: 'The ecosystem', b: 'Mapping the year before it starts — strategy the whole room can pressure-test.' },
+  { m: 'Jan', t: 'The ecosystem', b: 'Mapping the year before it starts: strategy the whole room can pressure-test.' },
   { m: 'Feb', t: 'Brand marketing', b: 'Planning the brand year ahead.' },
   { m: 'Mar', t: 'Advertising attribution', b: 'Where is the money actually going?' },
   { m: 'Apr', t: 'Attribution in practice', b: 'A working session on member data.' },
   { m: 'May', t: 'Influencer marketing', b: 'What is working, what is theatre.' },
   { m: 'Jun', t: 'Content strategy', b: 'Making content earn its budget.' },
   { m: 'Jul', t: 'Data-driven creative briefing', b: 'Briefs that start from evidence.' },
-  { m: 'Aug', t: 'Agency vs in-house', b: 'The lab setup — what big-agency experience buys, and when to build instead.' },
+  { m: 'Aug', t: 'Agency vs in-house', b: 'The lab setup: what big-agency experience buys, and when to build instead.' },
   { m: 'Sep', t: 'Affiliate marketing', b: 'Understanding the nuances, told through member wins.' },
   { m: 'Oct', t: 'Building brands in new territories', b: 'Entering markets without burning the budget.' },
   { m: 'Nov', t: 'Members’ vote', b: 'The room picks the topic.' },
-  { m: 'Dec', t: 'Year-end roundtable', b: 'What worked, what didn’t — said plainly.' },
+  { m: 'Dec', t: 'Year-end roundtable', b: 'What worked and what didn’t, said plainly.' },
 ]
 
 // № 04 — what the annual membership includes (the hero summary lists these
@@ -156,7 +156,7 @@ const INCLUDES = [
     // the event's name held on one line (no-break spaces): the hero summary
     // otherwise broke it as "… to NEXT / Summit Valletta"
     t: 'Two Full Event passes to NEXT\u00a0Summit\u00a0Valletta',
-    b: 'Included in membership — the community’s highest-visibility moment of the year.',
+    b: 'Included in membership. Valletta is the community’s highest-visibility moment of the year.',
   },
   {
     icon: BarChart3,
@@ -167,11 +167,11 @@ const INCLUDES = [
 
 // the rate card's one-line summary under the price (the deck's membership
 // slide leads with it)
-const MEMBERSHIP_LEDE = 'Two senior seats, everything the community does, and both Valletta passes — in one line on one invoice.'
+const MEMBERSHIP_LEDE = 'Two senior seats, everything the community does, and both Valletta passes, in one line on one invoice.'
 
 const TERMS = [
   'Membership is per company, billed annually.',
-  'Entry is by application and review — existing members can nominate.',
+  'Entry is by application and review. Existing members can nominate.',
   'Seats are senior-only and stay with the company.',
   'Sessions run under candour rules: what is shared in the room stays in the room.',
 ]
@@ -191,7 +191,7 @@ const APPLY_STEPS = [
   {
     n: '3',
     t: 'Take your seat',
-    b: 'Join the next monthly surgery, meet the room, and put marketingNEXT on your LinkedIn — it will mean something.',
+    b: 'Join the next monthly surgery, meet the room, and put marketingNEXT on your LinkedIn. It will mean something.',
   },
 ]
 
@@ -215,7 +215,7 @@ const HEADS = {
     no: '01',
     title: 'Real commercial intelligence, ',
     em: 'shared and acted on.',
-    lead: 'Senior marketers in iGaming carry knowledge that never reaches a conference stage. marketingNEXT exists to put it in one trusted, peer-led room — and to make sure it leaves as action.',
+    lead: 'Senior marketers in iGaming carry knowledge that never reaches a conference stage. marketingNEXT exists to put it in one trusted, peer-led room, and to make sure it leaves as action.',
   },
   format: {
     no: '02',
@@ -240,7 +240,7 @@ const HEADS = {
     no: '05',
     title: 'The 2027 programme, ',
     em: 'month by month.',
-    lead: 'The planned arc for the year. Topics are set collaboratively with members — the programme bends to what the room needs, not the other way round.',
+    lead: 'The planned arc for the year. Topics are set collaboratively with members: the programme bends to what the room needs, not the other way round.',
   },
   apply: {
     no: '06',
