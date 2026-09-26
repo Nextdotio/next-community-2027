@@ -233,7 +233,7 @@ export function PresentMode({ slides, startId, onClose, renderSlide, title, name
       </header>
 
       {/* the slide */}
-      <main ref={bodyRef} className="relative z-10 flex-1 overflow-y-auto overscroll-contain">
+      <main ref={bodyRef} className="relative z-10 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain">
         <div key={slide.id}
           className="mx-auto flex min-h-full w-full max-w-6xl flex-col justify-center px-5 py-8 sm:px-10 sm:py-10"
           style={reducedMotion() ? undefined : { animation: `pm-in-${dir < 0 ? 'back' : 'fwd'} .28s ease-out both` }}>
