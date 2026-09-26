@@ -4,6 +4,10 @@ Single-page React (Vite + Tailwind v4) app selling the marketingNEXT annual
 membership. All content lives in `src/App.jsx` as plain arrays near the top
 (`WHY`, `FORMAT`, `STANDARD`, `PROGRAMME`, `INCLUDES`, `TERMS`, `APPLY_STEPS`)
 plus the `CONTACT` and `PRICE` constants — edit the arrays, not the markup.
+Section titles and leads are in `HEADS`; the hero, price and card lines are
+constants beside the arrays (`HERO_TITLE`, `HERO_LEDE`, `PRODUCT_NAME`,
+`PRICE_UNIT`, `PRICE_NOTE`, `AVAILABILITY`, `FORMAT_QUOTE`, `STANDARD_CLOSE`,
+`MEMBERSHIP_LEDE`). The page and the Present mode deck both read them.
 
 ## Deploying to gh-pages — ALWAYS
 
@@ -100,3 +104,66 @@ update the STANDARD array, not just the hero.
 - Below lg the header shows a price chip to `#membership` once the hero
   summary has scrolled away (hidden while the membership section is on
   screen); the phone menu lists Membership too.
+
+## Present mode and seller tools (26 Sep 2026)
+
+Stuart: "easy for our sellers to take the buyers through and convince them
+to buy". A presenter shares their screen and walks the buyer through the
+membership one slide at a time.
+
+- **What exists.** `src/PresentMode.jsx` is the shared NEXT.io Present mode
+  (same behaviour on every brochure; only the classes follow this page:
+  `mn-*` tokens, Inter, square controls with tracked caps, the page grain).
+  `usePresent` holds the open slide, `PresentMode` renders the deck in a
+  portal, `CopyLinkButton` copies a section link.
+- **The deck (8 slides)** is `SLIDES` in `src/App.jsx`, rendered by
+  `renderSlide`: cover (hero copy, price, the four `HERO_META` facts and an
+  "In this presentation" list with counts, each a button to its slide) →
+  why (`HEADS.why`, `WHY`) → the format (`FORMAT`, `FORMAT_QUOTE`) → the
+  standard (`STANDARD`, `STANDARD_CLOSE`) → the membership (the one product:
+  `PRODUCT_NAME`, `PRICE`, `PRICE_UNIT`, `MEMBERSHIP_LEDE`, Apply for
+  membership through `applyMailto`, Open the card, Copy link, and every
+  `INCLUDES` item with its description through `IncludeItem`; past six it
+  shows "+ N more on the card") → the 2027 programme (`PROGRAMME`) → terms
+  (`HEADS.membership`, the price, `PRICE_NOTE` and `TERMS` through the rate
+  card's own `TermsList`) → how to apply (`ApplySteps`, the templated
+  application mailto and `CONTACT`). The terms sit on their own slide, so
+  the membership slide links to it ("See the terms") instead of repeating
+  them.
+- **New content appears automatically**: a criterion, inclusion, month, term
+  or step added to its array shows on its slide and in the cover's counts. A
+  new section needs an entry in `SLIDES` and a case in `renderSlide`. Never
+  type copy or figures onto a slide; read the arrays and constants.
+- **URLs.** `?present` opens the cover; `?present=<slide id>` opens that
+  slide. Slide ids are the page's section anchors (`why`, `format`,
+  `standard`, `membership`, `programme`, `apply`) plus `cover` and `terms`.
+  The address bar follows the slide (replaceState, so Back leaves the deck
+  rather than stepping through slides). Esc drops `present` from the
+  address. Copy link gives the page address plus `#membership`, never
+  `present`.
+- **Keys.** → Space PageDown next · ← PageUp back · Home End · G all slides ·
+  Esc closes the slide list, then the deck. Swipe left or right on touch.
+- **Entry points.** The nav's Present button (`PresentButton`,
+  `data-present-button`): labelled from md to lg and from xl, an icon
+  between lg and xl, where the five links and Apply already fill a 1024px
+  bar (measured with Inter: 60px spare before it was added). On phones
+  Present is in the menu. The rate card carries quiet Present and Copy link
+  actions under Apply. The hero summary stays buyer-only (no Present).
+  Focus returns to whatever opened the deck; a `?present` link returns it
+  to the visible Present button, or the menu button on a phone.
+- **No goal chips and no plan link**: one flat product, no goal tags, no
+  calculator or plan builder. Do not add either unless the product set
+  changes.
+- **Rules future edits must keep.** Nothing new is claimed: slides only read
+  the page's data. Buyer-facing words only (never seller, sales desk, talk
+  track, pitch, objection or close in the selling sense; the button is
+  "Present"; the existing "no pitches" copy is about vendors in the room and
+  stays). No em dashes in new copy. The deck top bar's title is set in caps, so it never holds a
+  brand name (the wordmark carries it); inside any caps label use `<Brand>`.
+  The deck is charcoal throughout: a white section's marker sweep becomes
+  yellow words on its slide (`HeadTitle deck`), never a sweep. Slides must
+  not use `animate-on-scroll` or `hero-rise` (`useReveal` only observes
+  elements present at first render, so they would stay invisible). Keep 44px
+  targets, and keep every slide inside a 1280x800 (and 1024x800) screen
+  without scrolling; phones and a portrait tablet may scroll a long slide.
+  Check by walking `?present` with ArrowRight at 390, 1024, 1280 and 1440.

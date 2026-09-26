@@ -85,6 +85,12 @@
   to { opacity: 1; transform: none; }
 }
 
+/* Present mode (src/PresentMode.jsx): each slide slides in from the side it
+   came from; a brand-yellow focus ring reads on the charcoal deck */
+@keyframes pm-in-fwd { from { opacity: 0; transform: translateX(24px) } to { opacity: 1; transform: none } }
+@keyframes pm-in-back { from { opacity: 0; transform: translateX(-24px) } to { opacity: 1; transform: none } }
+.pm :focus-visible { outline: 2px solid #ffcf33; outline-offset: 2px; }
+
 /* film-grain over everything, very quiet */
 .grain::after {
   content: '';
