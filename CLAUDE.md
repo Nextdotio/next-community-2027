@@ -123,8 +123,9 @@ membership one slide at a time.
   standard (`STANDARD`, `STANDARD_CLOSE`) → the membership (the one product:
   `PRODUCT_NAME`, `PRICE`, `PRICE_UNIT`, `MEMBERSHIP_LEDE`, Apply for
   membership through `applyMailto`, Open the card, Copy link, and every
-  `INCLUDES` item with its description through `IncludeItem`; past six it
-  shows "+ N more on the card") → the 2027 programme (`PROGRAMME`) → terms
+  `INCLUDES` item with its description through `IncludeItem`, every one,
+  never "+ N more on the card"; Stuart, 26 Sep 2026: "Please do include all
+  deliverables. It's important") → the 2027 programme (`PROGRAMME`) → terms
   (`HEADS.membership`, the price, `PRICE_NOTE` and `TERMS` through the rate
   card's own `TermsList`) → how to apply (`ApplySteps`, the templated
   application mailto and `CONTACT`). The terms sit on their own slide, so

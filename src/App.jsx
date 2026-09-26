@@ -503,8 +503,6 @@ const SLIDES = [
   { id: 'terms', label: 'Terms', group: 'Next steps', count: `${TERMS.length} terms` },
   { id: 'apply', label: 'How to apply', group: 'Next steps', count: `${APPLY_STEPS.length} steps` },
 ]
-// the membership slide shows up to six inclusions, then "+ N more on the card"
-const SLIDE_INCLUDES = 6
 
 function SlideEyebrow({ children }) {
   return <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-mn-red sm:text-xs">{children}</p>
@@ -651,8 +649,9 @@ function StandardSlide({ slide }) {
 // line, the ways to act on it (apply through the page's mailto, open the rate
 // card, copy its link) and what the membership includes.
 function MembershipSlide({ goId, onOpenCard }) {
-  const shown = INCLUDES.slice(0, SLIDE_INCLUDES)
-  const more = INCLUDES.length - shown.length
+  // every inclusion, always (Stuart, 26 Sep 2026: "Please do include all
+  // deliverables. It's important")
+  const shown = INCLUDES
   return (
     <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-x-14">
       <div className="lg:col-span-5">
@@ -688,7 +687,6 @@ function MembershipSlide({ goId, onOpenCard }) {
         <div className="mt-3 space-y-px border-y border-mn-line bg-mn-line">
           {shown.map((inc) => <IncludeItem key={inc.t} inc={inc} compact />)}
         </div>
-        {more > 0 && <p className="mt-4 text-[13px] text-mn-mute">+ {more} more on the card</p>}
       </div>
     </div>
   )
