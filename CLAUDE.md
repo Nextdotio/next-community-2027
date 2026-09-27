@@ -24,7 +24,11 @@ for this repo.
 
 ## Workflow
 
-- Develop on branch `claude/2027-ticket-pricing-brochure-p79mqg`.
+- Develop on branch `claude/new-session-h6ajdg`: the live site is built from it
+  (27 Sep 2026). It supersedes `claude/2027-ticket-pricing-brochure-p79mqg`, last touched
+  22 Sep 2026 and 7 commits behind; never develop on or deploy from that
+  branch. More than one session works on this branch, so pull before every
+  deploy.
 - Run `npm run build` to verify changes compile.
 - Redeploy gh-pages (see above).
 - Commit with a clear message and push the branch.
