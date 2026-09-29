@@ -299,7 +299,8 @@ function Wordmark({ className = 'h-8', variant = 'light' }) {
 }
 
 // A brand name inside an uppercase label keeps its own casing: CSS caps would
-// render NEXT.IO and MARKETINGNEXT. Check rendered innerText, not the source.
+// render NEXT.IO and MARKETINGNEXT. iGaming goes through it too, possessive
+// included, so it never reads IGAMING. Check rendered innerText, not the source.
 function Brand({ children, className = '' }) {
   return <span className={`normal-case ${className}`}>{children}</span>
 }
@@ -308,7 +309,7 @@ function Brand({ children, className = '' }) {
 // with the dot bound to the first phrase, so a narrow screen breaks after it
 // instead of opening a line with it.
 function HeroEyebrow() {
-  return <>A <Brand>NEXT.io</Brand> community&nbsp;· iGaming’s senior marketing circle</>
+  return <>A <Brand>NEXT.io</Brand> community&nbsp;· <Brand>iGaming’s</Brand> senior marketing circle</>
 }
 
 // A section title from HEADS. The page sets `em` in italic, with the marker
