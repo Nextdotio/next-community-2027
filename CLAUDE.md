@@ -172,3 +172,6 @@ membership one slide at a time.
   targets, and keep every slide inside a 1280x800 (and 1024x800) screen
   without scrolling; phones and a portrait tablet may scroll a long slide.
   Check by walking `?present` with ArrowRight at 390, 1024, 1280 and 1440.
+- iGaming always renders with a lowercase i, including inside uppercase elements (Stuart, 29 Sep 2026).
+  In a caps label it goes through `<Brand>`, possessive included, as the hero
+  eyebrow does (`<Brand>iGaming’s</Brand>`, so it never reads iGaming’S).
